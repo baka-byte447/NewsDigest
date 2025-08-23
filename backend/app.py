@@ -203,7 +203,7 @@ app.secret_key = app.config['SECRET_KEY']
 # Configure CORS for production
 CORS(app, supports_credentials=True, origins=[
     'http://localhost:3000',  # Local development
-    'https://newssummarizerdashboard.onrender.com'  # Update this with your actual frontend domain
+    'https://news-summarizer-dashboard.vercel.app/'  # Update this with your actual frontend domain
 ])
 
 # Initialize OAuth
