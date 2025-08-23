@@ -124,6 +124,22 @@ def get_user():
         return jsonify(user)
     return jsonify({'error': 'Not authenticated'}), 401
 
+@auth_bp.route('/test-oauth')
+def test_oauth():
+    """Test endpoint to check OAuth configuration"""
+    oauth = current_app.extensions['authlib.integrations.flask_client']
+    
+    config_info = {
+        'github_configured': bool(oauth.github),
+        'github_client_id': oauth.github.client_id if oauth.github else None,
+        'github_client_secret': '***' if oauth.github and oauth.github.client_secret else None,
+        'frontend_url': current_app.config.get('FRONTEND_URL'),
+        'secret_key_configured': bool(current_app.config.get('SECRET_KEY')),
+        'redirect_uri': url_for('auth.callback', provider='github', _external=True)
+    }
+    
+    return jsonify(config_info)
+
 
 
 

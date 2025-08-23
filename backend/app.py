@@ -234,6 +234,40 @@ def index():
         'documentation': 'Available endpoints: /api/news, /api/health, /auth/login/github'
     })
 
+@app.route('/test-oauth-config')
+def test_oauth_config():
+    """Test endpoint to check OAuth configuration"""
+    try:
+        oauth = app.extensions['authlib.integrations.flask_client']
+        
+        config_info = {
+            'github_configured': bool(oauth.github),
+            'github_client_id': oauth.github.client_id if oauth.github else None,
+            'github_client_secret': '***' if oauth.github and oauth.github.client_secret else None,
+            'frontend_url': app.config.get('FRONTEND_URL'),
+            'secret_key_configured': bool(app.config.get('SECRET_KEY')),
+            'redirect_uri': f"https://newssummarizerdashboard-1.onrender.com/auth/callback/github",
+            'auth_endpoints': [
+                '/auth/login/github',
+                '/auth/callback/github',
+                '/auth/logout',
+                '/auth/user'
+            ]
+        }
+        
+        return jsonify(config_info)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/health')
+def health_check():
+    """Health check endpoint"""
+    return jsonify({
+        'status': 'healthy',
+        'timestamp': datetime.now().isoformat(),
+        'service': 'News Dashboard API'
+    })
+
 @app.route('/api/news')
 def get_news():
     """Fetch news articles"""
