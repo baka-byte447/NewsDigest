@@ -5,3 +5,4 @@ python-dotenv==1.0.0
 google-cloud-translate==3.12.0
 google-generativeai==0.3.0
 authlib==1.2.1
+gunicorn==21.2.0

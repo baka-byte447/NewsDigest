@@ -7,12 +7,17 @@ from datetime import datetime
 from config import Config
 from auth import auth_bp, init_oauth
 from news_service import NewsService
+import os
 
 app = Flask(__name__)
 app.config.from_object(Config)
 app.secret_key = app.config['SECRET_KEY']
 
-CORS(app, supports_credentials=True, origins=['http://localhost:3000'])
+# Configure CORS for production
+CORS(app, supports_credentials=True, origins=[
+    'http://localhost:3000',  # Local development
+    'https://your-frontend-domain.onrender.com'  # Update this with your actual frontend domain
+])
 
 # Initialize OAuth
 oauth, google, github = init_oauth(app)
@@ -96,7 +101,9 @@ def share_article():
             'views': 0
         }
         
-        share_url = f"http://localhost:3000/shared/{share_id}"
+        # Use environment variable for base URL or default to request host
+        base_url = request.host_url.rstrip('/')
+        share_url = f"{base_url}/shared/{share_id}"
         
         return jsonify({
             'shareId': share_id,
@@ -157,4 +164,6 @@ def health_check():
     })
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    # Production settings
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
