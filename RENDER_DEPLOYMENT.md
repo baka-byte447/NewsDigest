@@ -72,7 +72,7 @@ In your deployed Flask app, update the CORS origins to include your frontend dom
 ```python
 CORS(app, supports_credentials=True, origins=[
     'http://localhost:3000',  # Local development
-    'https://your-frontend-domain.onrender.com'  # Your frontend URL
+    'https://newssummarizerdashboard.onrender.com'  # Your frontend URL
 ])
 ```
 
