@@ -1,130 +1,233 @@
-# Deploying NewsSumm to Render
+# Render Backend Deployment Guide
 
-This guide will walk you through deploying your Flask backend to Render.
+This guide will help you deploy your News Dashboard backend to Render and integrate it with your Vercel frontend.
 
-## Prerequisites
+## 🚀 Quick Setup
 
-1. A Render account (sign up at [render.com](https://render.com))
-2. Your Flask application code
-3. Environment variables for your API keys
+### 1. Prerequisites
+- Render account
+- All API keys configured
+- GitHub repository with your code
 
-## Step 1: Prepare Your Repository
+### 2. Deploy to Render
 
-Make sure your backend folder contains:
-- `app.py` - Main Flask application
-- `requirements.txt` - Python dependencies
-- `wsgi.py` - WSGI entry point
-- `build.sh` - Build script
-- All other necessary Python files
-
-## Step 2: Create a New Web Service on Render
-
-1. Go to [render.com](https://render.com) and sign in
-2. Click "New +" and select "Web Service"
+#### Option A: Deploy via Render UI
+1. Go to [Render Dashboard](https://dashboard.render.com/)
+2. Click "New" → "Web Service"
 3. Connect your GitHub repository
 4. Configure the service:
+   - **Name**: `newssummarizerdashboard` (or your preferred name)
+   - **Environment**: `Python 3`
+   - **Build Command**: `pip install -r requirements.txt`
+   - **Start Command**: `gunicorn app:app`
+   - **Root Directory**: `backend` (if your backend is in a subdirectory)
 
-### Basic Settings
-- **Name**: `newssumm-backend` (or your preferred name)
-- **Environment**: `Python 3`
-- **Region**: Choose closest to your users
-- **Branch**: `main` (or your default branch)
+#### Option B: Deploy via Render CLI
+```bash
+# Install Render CLI
+npm install -g @render/cli
 
-### Build & Deploy Settings
-- **Build Command**: `./build.sh`
-- **Start Command**: `gunicorn wsgi:app`
-- **Root Directory**: `backend` (since your Flask app is in the backend folder)
+# Navigate to backend directory
+cd backend
 
-## Step 3: Set Environment Variables
+# Login to Render
+render login
 
-In your Render service dashboard, go to "Environment" tab and add:
-
+# Deploy
+render deploy
 ```
-SECRET_KEY=your-secure-secret-key-here
+
+## 🔧 Environment Variables
+
+Set these environment variables in your Render dashboard:
+
+### Required Variables
+```bash
+SECRET_KEY=your-super-secure-production-key
 NEWS_API_KEY=your-news-api-key
 GEMINI_API_KEY=your-gemini-api-key
-GOOGLE_CLIENT_ID=your-google-oauth-client-id
-GOOGLE_CLIENT_SECRET=your-google-oauth-client-secret
 GITHUB_CLIENT_ID=your-github-oauth-client-id
 GITHUB_CLIENT_SECRET=your-github-oauth-client-secret
-GOOGLE_TRANSLATE_KEY=your-google-translate-api-key
+FRONTEND_URL=https://news-summarizer-dashboard-swlg.vercel.app
 ```
 
-## Step 4: Deploy
+### Optional Variables
+```bash
+GOOGLE_CLIENT_ID=your-google-oauth-client-id
+GOOGLE_CLIENT_SECRET=your-google-oauth-client-secret
+GOOGLE_TRANSLATE_KEY=your-google-translate-key
+```
 
-1. Click "Create Web Service"
-2. Render will automatically build and deploy your application
-3. Wait for the build to complete (usually 2-5 minutes)
+## 🔗 GitHub OAuth Configuration
 
-## Step 5: Update Frontend Configuration
+1. Go to GitHub Settings > Developer settings > OAuth Apps
+2. Create a new OAuth App or edit existing one
+3. Set the following URLs:
+   - **Homepage URL**: `https://news-summarizer-dashboard-swlg.vercel.app`
+   - **Authorization callback URL**: `https://newssummarizerdashboard-1.onrender.com/auth/callback/github`
 
-After deployment, update your frontend API configuration to use the new Render URL:
+## 🔄 Frontend Configuration
+
+Your frontend API configuration in `frontend/src/utils/api.js` should already be correct:
 
 ```javascript
-// In frontend/src/utils/api.js
-const API_BASE_URL = 'https://your-app-name.onrender.com';
+const API_BASE = process.env.NODE_ENV === 'production'
+  ? 'https://newssummarizerdashboard-1.onrender.com'  // Render backend URL
+  : 'http://localhost:5000';
 ```
 
-## Step 6: Update CORS Origins
+## 📁 Project Structure
 
-In your deployed Flask app, update the CORS origins to include your frontend domain:
+Your Render project structure should look like:
 
-```python
-CORS(app, supports_credentials=True, origins=[
-    'http://localhost:3000',  # Local development
-    'https://newssummarizerdashboard.onrender.com'  # Your frontend URL
-])
+```
+backend/
+├── app.py              # Main Flask application
+├── auth.py             # Auth logic
+├── config.py           # Configuration
+├── news_service.py     # News service
+├── requirements.txt    # Python dependencies
+└── wsgi.py            # WSGI entry point
 ```
 
-## Step 7: Test Your Deployment
+## 🧪 Testing Your Deployment
 
-1. Visit your Render service URL
-2. Test the health check endpoint: `/api/health`
-3. Test your news API endpoint: `/api/news`
+### 1. Test API Health
+```bash
+curl https://newssummarizerdashboard-1.onrender.com/api/health
+```
 
-## Troubleshooting
+### 2. Test News API
+```bash
+curl "https://newssummarizerdashboard-1.onrender.com/api/news?category=technology"
+```
+
+### 3. Test OAuth Flow
+1. Visit: `https://newssummarizerdashboard-1.onrender.com/auth/login/github`
+2. Complete GitHub authorization
+3. Should redirect to your Vercel frontend with user data
+
+## 🔍 Troubleshooting
 
 ### Common Issues
 
-1. **Build Failures**: Check the build logs in Render dashboard
-2. **Import Errors**: Ensure all dependencies are in `requirements.txt`
-3. **Environment Variables**: Verify all required env vars are set
-4. **Port Issues**: Render automatically sets the PORT environment variable
+#### 1. Build Failures
+- Check that all dependencies are in `requirements.txt`
+- Verify Python version compatibility
+- Check build logs in Render dashboard
 
-### Logs
+#### 2. CORS Issues
+- Ensure CORS configuration includes your Vercel domain
+- Check that credentials are properly configured
 
-- View build logs in the "Logs" tab
-- View runtime logs in the "Logs" tab after deployment
+#### 3. OAuth Redirect Issues
+- Verify callback URLs in GitHub OAuth settings
+- Ensure `FRONTEND_URL` environment variable is set correctly
 
-## Security Considerations
+#### 4. Environment Variable Issues
+- Check that all required environment variables are set
+- Verify API keys are valid and have sufficient quotas
 
-1. **Never commit API keys** to your repository
-2. Use environment variables for all sensitive data
-3. Enable HTTPS (Render does this automatically)
-4. Consider adding rate limiting for production
+### Debugging
 
-## Scaling
+#### Check Application Logs
+```bash
+# View logs in Render dashboard
+# Go to your service → Logs tab
+```
 
-- Render automatically scales based on traffic
-- You can manually adjust instance size in the dashboard
-- Consider upgrading to a paid plan for production workloads
+#### Test Locally
+```bash
+# Test locally before deploying
+cd backend
+pip install -r requirements.txt
+python app.py
+```
 
-## Monitoring
+## 🔒 Security Considerations
 
-- Use Render's built-in monitoring dashboard
-- Set up alerts for downtime
-- Monitor response times and error rates
+### 1. Environment Variables
+- Never commit sensitive data to your repository
+- Use Render's environment variable management
+- Rotate keys regularly
 
-## Next Steps
+### 2. CORS Configuration
+- Only allow necessary origins
+- Use specific domains instead of wildcards
 
-1. Deploy your frontend to Render or another hosting service
-2. Set up a custom domain if desired
-3. Configure CI/CD for automatic deployments
-4. Set up monitoring and alerting
-5. Consider adding a database for persistent storage
+### 3. OAuth Security
+- Use HTTPS for all OAuth callbacks
+- Validate OAuth state parameters
+- Implement proper session management
 
-## Support
+## 📊 Monitoring
 
-- [Render Documentation](https://render.com/docs)
-- [Render Community](https://community.render.com)
-- Check your service logs for specific error messages
+### 1. Render Analytics
+- Monitor application performance
+- Track response times
+- Set up alerts for errors
+
+### 2. Custom Monitoring
+- Add logging to your application
+- Monitor API response times
+- Track OAuth success/failure rates
+
+## 🔄 CI/CD Integration
+
+### GitHub Actions Example
+```yaml
+name: Deploy to Render
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to Render
+        uses: johnbeynon/render-deploy-action@v1.0.0
+        with:
+          service-id: ${{ secrets.RENDER_SERVICE_ID }}
+          api-key: ${{ secrets.RENDER_API_KEY }}
+```
+
+## 🎯 Performance Optimization
+
+### 1. Application Optimization
+- Use connection pooling for external APIs
+- Implement caching where possible
+- Optimize database queries
+
+### 2. Render-Specific Optimization
+- Use appropriate instance types
+- Enable auto-scaling if needed
+- Monitor resource usage
+
+## 📞 Support
+
+If you encounter issues:
+
+1. Check the [troubleshooting section](#-troubleshooting)
+2. Review [Render documentation](https://render.com/docs)
+3. Check application logs in Render dashboard
+4. Verify environment variable configuration
+5. Test OAuth callback URLs
+
+## 🎉 Success Checklist
+
+- [ ] Backend deployed to Render
+- [ ] Environment variables configured
+- [ ] GitHub OAuth callback URL updated
+- [ ] Frontend API URL updated
+- [ ] Health check endpoint working
+- [ ] News API responding
+- [ ] OAuth flow working
+- [ ] CORS properly configured
+- [ ] Application responding within acceptable time limits
+
+---
+
+**Happy Deploying! 🚀**

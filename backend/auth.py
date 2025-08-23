@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify, session, redirect, url_for, current_app
 from authlib.integrations.flask_client import OAuth
 import requests
+import os
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -65,6 +66,9 @@ def login(provider):
         if not oauth.github:
             return jsonify({'error': 'GitHub OAuth is not configured. Please set GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET environment variables.'}), 500
         redirect_uri = url_for('auth.callback', provider='github', _external=True)
+        print(f"DEBUG: GitHub OAuth redirect_uri = {redirect_uri}")
+        print(f"DEBUG: GitHub OAuth client_id = {oauth.github.client_id}")
+        print(f"DEBUG: GitHub OAuth client_secret = {'*' * len(oauth.github.client_secret) if oauth.github.client_secret else 'None'}")
         return oauth.github.authorize_redirect(redirect_uri)
     else:
         return jsonify({'error': 'Invalid provider. Supported providers: google, github'}), 400
@@ -102,7 +106,9 @@ def callback(provider):
             return jsonify({'error': 'Invalid provider'}), 400
         
         session['user'] = user_data
-        return redirect('http://localhost:3000/dashboard')
+        # Use config for frontend URL
+        frontend_url = current_app.config.get('FRONTEND_URL', 'http://localhost:3000')
+        return redirect(f'{frontend_url}/dashboard')
     except Exception as e:
         return jsonify({'error': str(e)}), 400
 

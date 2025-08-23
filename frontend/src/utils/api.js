@@ -84,7 +84,7 @@
 // API utilities for backend communication
 
 const API_BASE = process.env.NODE_ENV === 'production'
-  ? 'https://newssummarizerdashboard.onrender.com'  // Render backend URL
+  ? 'https://newssummarizerdashboard-1.onrender.com'  // Render backend URL
   : 'http://localhost:5000';
 
 export const api = {
