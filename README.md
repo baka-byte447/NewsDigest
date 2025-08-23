@@ -260,6 +260,6 @@ docker-compose up --build
 
 ---
 
-**Made with ❤️ by [Your Name]**
+**Made with ❤️ by Milan**
 
 *Star this repository if you found it helpful!*
