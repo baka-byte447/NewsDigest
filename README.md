@@ -199,12 +199,12 @@ frontend/
 
 
 ### Feature rich Navigation Bar:
-  ## News Categories
-  ## Saved Articles
-  ## Streak count
-  ## Articles Read
-  ## Theme toggle
-  ## User Menu
+  #### News Categories
+  #### Saved Articles
+  #### Streak count
+  #### Articles Read
+  #### Theme toggle
+  #### User Menu
 ![Alt Text](SS/Screenshot%202025-08-24%20190251.png)
 
 
