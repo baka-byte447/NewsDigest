@@ -6,6 +6,7 @@ import Dashboard from './components/Dashboard';
 import OnboardingModal from './components/OnboardingModal';
 import NewsModal from './components/NewsModal';
 import SettingsModal from './components/SettingsModal';
+import SavedArticles from './components/SavedArticles';
 import { 
   getPreferences, 
   savePreferences, 
@@ -182,6 +183,9 @@ function App() {
   const [showSettings, setShowSettings] = useState(false);
   const [selectedNews, setSelectedNews] = useState(null);
   
+  // Saved articles state
+  const [showSavedArticles, setShowSavedArticles] = useState(false);
+  
   // Stats state for re-rendering
   const [statsUpdate, setStatsUpdate] = useState(0);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
@@ -304,6 +308,14 @@ function App() {
     setActiveCategory(category);
   };
 
+  const handleSavedArticlesClick = () => {
+    setShowSavedArticles(true);
+  };
+
+  const handleBackToDashboard = () => {
+    setShowSavedArticles(false);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -338,20 +350,28 @@ function App() {
                   categories={preferences.categories}
                   activeCategory={activeCategory}
                   onCategoryChange={handleCategoryChange}
+                  onSavedArticlesClick={handleSavedArticlesClick}
                 />
 
                 <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                  <Routes>
-                    <Route path="/dashboard" element={
-                      <Dashboard
-                        activeCategory={activeCategory}
-                        preferences={preferences}
-                        onNewsClick={handleNewsClick}
-                        refreshTrigger={refreshTrigger}
-                      />
-                    } />
-                    <Route path="/" element={<Navigate to="/dashboard" replace />} />
-                  </Routes>
+                  {showSavedArticles ? (
+                    <SavedArticles
+                      onNewsClick={handleNewsClick}
+                      onBack={handleBackToDashboard}
+                    />
+                  ) : (
+                    <Routes>
+                      <Route path="/dashboard" element={
+                        <Dashboard
+                          activeCategory={activeCategory}
+                          preferences={preferences}
+                          onNewsClick={handleNewsClick}
+                          refreshTrigger={refreshTrigger}
+                        />
+                      } />
+                      <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                    </Routes>
+                  )}
                 </main>
 
                 {/* Modals */}

@@ -9,7 +9,8 @@ import {
   Flame,
   BookOpen,
   Menu,
-  X
+  X,
+  Bookmark
 } from 'lucide-react';
 import { getReadingStreak, getDailyReads } from '../utils/storage';
 
@@ -21,7 +22,8 @@ const Navbar = ({
   onLogout,
   categories,
   activeCategory,
-  onCategoryChange 
+  onCategoryChange,
+  onSavedArticlesClick
 }) => {
   const [streak, setStreak] = useState({ streak: 0 });
   const [dailyReads, setDailyReads] = useState({ count: 0 });
@@ -79,6 +81,15 @@ const Navbar = ({
                   {categoryLabels[category]}
                 </button>
               ))}
+              
+              {/* Saved Articles Button */}
+              <button
+                onClick={onSavedArticlesClick}
+                className="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 flex items-center gap-2"
+              >
+                <Bookmark className="w-4 h-4" />
+                Saved Articles
+              </button>
             </div>
 
             {/* Right Side */}
@@ -218,6 +229,18 @@ const Navbar = ({
                   {categoryLabels[category]}
                 </button>
               ))}
+              
+              {/* Mobile Saved Articles Button */}
+              <button
+                onClick={() => {
+                  onSavedArticlesClick();
+                  setShowMobileMenu(false);
+                }}
+                className="col-span-2 px-4 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 flex items-center justify-center gap-2"
+              >
+                <Bookmark className="w-4 h-4" />
+                Saved Articles
+              </button>
             </div>
 
             {/* Mobile Stats */}
