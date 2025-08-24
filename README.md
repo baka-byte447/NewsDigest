@@ -188,6 +188,11 @@ frontend/
 
 *[Add screenshots of your app here]*
 
+![Alt Text](SS/Screenshot%202025-08-24%20190048.png)
+![Alt Text](SS/Screenshot%202025-08-24%20190230.png)
+![Alt Text](SS/Screenshot%202025-08-24%20190251.png)
+
+
 ## 🔧 Development
 
 ### Running Tests
