@@ -20,7 +20,7 @@ import {
   incrementDailyReads,
   updateReadingStreak
 } from '../utils/storage';
-import { api } from '../utils/api';
+import api  from '../utils/api';
 
 const NewsModal = ({ article, isOpen, onClose, onStatsUpdate }) => {
   const [vote, setVote] = useState(null);

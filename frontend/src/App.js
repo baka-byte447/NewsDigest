@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Navbar from './components/Navbar';
-import Dashboard from './components/dashboard';
+import Dashboard from './components/Dashboard';
 import OnboardingModal from './components/OnboardingModal';
 import NewsModal from './components/NewsModal';
 import SettingsModal from './components/SettingsModal';
@@ -13,13 +13,14 @@ import {
   getReadingStreak,
   getDailyReads 
 } from './utils/storage';
-import { api } from './utils/api';
+import api  from './utils/api'; 
+// import { getUser } from './utils/api'; 
 import './styles/globals.css';
 
 // Login Component
 const LoginPage = ({ onLogin }) => {
   const handleLogin = (provider) => {
-    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "https://newssummarizerdashboard-1.onrender.com";
+    const BACKEND_URL = "http://localhost:5000";
     window.location.href = `${BACKEND_URL}/auth/login/${provider}`;
   };
 
@@ -201,7 +202,7 @@ function App() {
 
   const initializeApp = async () => {
     try {
-      // Load preferences
+      // Load preferences first
       const savedPrefs = getPreferences();
       setPreferences(savedPrefs);
       setDarkMode(savedPrefs.theme === 'dark');
@@ -210,9 +211,10 @@ function App() {
       if (savedPrefs.categories.length > 0) {
         setActiveCategory(savedPrefs.categories[0]);
       }
-
+  
       // Check authentication
       const userData = await api.getUser();
+      
       if (userData) {
         setUser(userData);
         
@@ -223,15 +225,20 @@ function App() {
       }
     } catch (error) {
       console.error('Failed to initialize app:', error);
+      setUser(null);
     } finally {
       setLoading(false);
     }
   };
-
+  
+  // Also update your handleLogin function to be more explicit
   const handleLogin = (userData) => {
+    console.log('Logging in user:', userData); // Debug log
     setUser(userData);
     setShowOnboarding(true);
   };
+
+
 
   const handleLogout = async () => {
     try {

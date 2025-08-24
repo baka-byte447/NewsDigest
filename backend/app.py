@@ -78,7 +78,7 @@ def test_oauth_config():
             'github_client_secret': '***' if oauth.github and oauth.github.client_secret else None,
             'frontend_url': app.config.get('FRONTEND_URL'),
             'secret_key_configured': bool(app.config.get('SECRET_KEY')),
-            'redirect_uri': f"https://newssummarizerdashboard-1.onrender.com/auth/callback/github",
+            'redirect_uri': f"http://localhost:5000/auth/callback/github",
             'auth_endpoints': [
                 '/auth/login/github',
                 '/auth/callback/github',
