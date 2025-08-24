@@ -186,10 +186,25 @@ frontend/
 
 ## 📱 Screenshots
 
-*[Add screenshots of your app here]*
+### Dashboard Home
 
 ![Alt Text](SS/Screenshot%202025-08-24%20190048.png)
+
+
+
+### Settings pane
+
 ![Alt Text](SS/Screenshot%202025-08-24%20190230.png)
+
+
+
+### Feature rich Navigation Bar:
+  ## News Categories
+  ## Saved Articles
+  ## Streak count
+  ## Articles Read
+  ## Theme toggle
+  ## User Menu
 ![Alt Text](SS/Screenshot%202025-08-24%20190251.png)
 
 
