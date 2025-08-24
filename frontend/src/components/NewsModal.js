@@ -108,7 +108,7 @@ const NewsModal = ({ article, isOpen, onClose, onStatsUpdate }) => {
         initial={{ scale: 0.9, opacity: 0, y: 20 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.9, opacity: 0, y: 20 }}
-        className="relative w-full max-w-4xl max-h-[90vh] mx-4 bg-white dark:bg-gray-900 rounded-2xl shadow-2xl overflow-hidden"
+        className="relative w-full max-w-4xl max-h-[90vh] mx-4 bg-white dark:bg-gray-900 rounded-2xl shadow-2xl overflow-hidden flex flex-col"
       >
         {/* Header */}
         <div className="relative">
@@ -141,7 +141,7 @@ const NewsModal = ({ article, isOpen, onClose, onStatsUpdate }) => {
         </div>
 
         {/* Content */}
-        <div className="p-6 max-h-96 overflow-y-auto">
+        <div className="p-6 flex-1 overflow-y-auto">
           {/* Title */}
           <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4 leading-tight">
             {article.translatedTitle || article.title}
@@ -219,32 +219,32 @@ const NewsModal = ({ article, isOpen, onClose, onStatsUpdate }) => {
         </div>
 
         {/* Actions Footer */}
-        <div className="p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50">
-          <div className="flex items-center justify-between">
+        <div className="p-4 sm:p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50 flex-shrink-0">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             {/* Voting */}
             <div className="flex items-center gap-2">
               <button
                 onClick={() => handleVote('up')}
-                className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all ${
+                className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-2 rounded-lg transition-all ${
                   vote === 'up'
                     ? 'bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400'
                     : 'hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400'
                 }`}
               >
                 <ThumbsUp className="w-4 h-4" />
-                <span className="text-sm font-medium">Like</span>
+                <span className="text-xs sm:text-sm font-medium">Like</span>
               </button>
 
               <button
                 onClick={() => handleVote('down')}
-                className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all ${
+                className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-2 rounded-lg transition-all ${
                   vote === 'down'
                     ? 'bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-400'
                     : 'hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400'
                 }`}
               >
                 <ThumbsDown className="w-4 h-4" />
-                <span className="text-sm font-medium">Dislike</span>
+                <span className="text-xs sm:text-sm font-medium">Dislike</span>
               </button>
             </div>
 
@@ -252,7 +252,7 @@ const NewsModal = ({ article, isOpen, onClose, onStatsUpdate }) => {
             <div className="flex items-center gap-2">
               <button
                 onClick={handleSave}
-                className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all ${
+                className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-2 rounded-lg transition-all ${
                   isSaved
                     ? 'bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400'
                     : 'hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400'
@@ -263,7 +263,7 @@ const NewsModal = ({ article, isOpen, onClose, onStatsUpdate }) => {
                 ) : (
                   <Bookmark className="w-4 h-4" />
                 )}
-                <span className="text-sm font-medium">
+                <span className="text-xs sm:text-sm font-medium">
                   {isSaved ? 'Saved' : 'Save'}
                 </span>
               </button>
@@ -271,10 +271,10 @@ const NewsModal = ({ article, isOpen, onClose, onStatsUpdate }) => {
               <button
                 onClick={handleShare}
                 disabled={isSharing}
-                className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 transition-all disabled:opacity-50"
+                className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 transition-all disabled:opacity-50"
               >
                 <Share2 className="w-4 h-4" />
-                <span className="text-sm font-medium">
+                <span className="text-xs sm:text-sm font-medium">
                   {isSharing ? 'Sharing...' : 'Share'}
                 </span>
               </button>
