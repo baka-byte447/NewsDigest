@@ -19,9 +19,8 @@ import './styles/globals.css';
 // Login Component
 const LoginPage = ({ onLogin }) => {
   const handleLogin = (provider) => {
-    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "https://newssummarizerdashboard.onrender.com/";
-window.location.href = `${BACKEND_URL}/auth/login/${provider}`;
-
+    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "https://newssummarizerdashboard-1.onrender.com";
+    window.location.href = `${BACKEND_URL}/auth/login/${provider}`;
   };
 
   return (
